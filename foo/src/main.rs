@@ -1,19 +1,31 @@
-//extern crate tokio;
-use tokio::io::AsyncWriteExt;
-use tokio::net::TcpStream;
+use tokio::time::{self, Duration};
+use std::future::Future;
 
-use std::error::Error;
+fn set_interval<F, Fut>(mut f: F, dur: Duration)
+where
+    F: Send + 'static + FnMut() -> Fut,
+    Fut: Future<Output = ()> + Send + 'static,
+{
+    // Create stream of intervals.
+    let mut interval = time::interval(dur);
+    
+    tokio::spawn(async move {
+        // Skip the first tick at 0ms.
+        interval.tick().await;
+        loop {
+            // Wait until next tick:
+            interval.tick().await;
+            // Spawn a task for the operation.
+            tokio::spawn(f());
+        }
+    });
+}
 
 #[tokio::main]
-pub async fn main() -> Result<(), Box<dyn Error>> {
-    // Open a TCP stream to the socket address.
-    //
-    // Note that this is the Tokio TcpStream, which is fully async.
-    let mut stream = TcpStream::connect("127.0.0.1:6142").await?;
-    println!("created stream");
-
-    let result = stream.write(b"hello world\n").await;
-    println!("wrote to stream; success={:?}", result.is_ok());
-
-    Ok(())
+async fn main() {
+    set_interval(|| async {
+        println!("Hello world!");
+    }, Duration::from_millis(1000));
+    
+    time::delay_for(Duration::from_millis(6000)).await;
 }
