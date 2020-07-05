@@ -1,1 +1,1 @@
-rustc ./split.rs && ./split
+rustc executable.rs --extern rary=library.rlib && ./executable
