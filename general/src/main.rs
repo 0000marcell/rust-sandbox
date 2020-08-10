@@ -9,18 +9,19 @@ struct Letters {
 impl Letters {
     fn start(mut self, word: &str) {
         self.active = true;
-        let mut next_char: char;
-        println!("start! {}", self.active);
+        //let mut next_char: char;
+        //println!("start! {}", self.active);
         for i in word.chars() {
-            if i == ' ' {
-                next_char = i;
-            } else {
-                next_char = ' ';
-            }
-            self.letters.push(Letter {
+            println!("letter: {}", i);
+            // if i != ' ' {
+            //     next_char = i;
+            // } else {
+            //     next_char = ' ';
+            // }
+            // self.letters.push(Letter {
 
-            })
-            println!("letter: {}", next_char);
+            // })
+            //println!("letter: {}", next_char);
         } 
     }
 }
@@ -52,7 +53,7 @@ fn generateLetter(next: char) -> Letter {
         duration: 2000,
         animating: true,
         isDead: false
-    }
+    };
 
     letter.animate();
     return letter;
@@ -67,7 +68,4 @@ fn main() {
         alphabet: vec![String::from("A"), String::from("B"), String::from("C")]
     };
     letters.start("C");
-    // println!("active: {}", letters.active);
-    // println!("letters: {}", letters.letters[0]);
-    // println!("alphabet: {}", letters.alphabet[0]);
 }
