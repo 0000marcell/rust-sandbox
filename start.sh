@@ -1,1 +1,0 @@
-rustc ./split.rs && ./split
